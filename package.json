@@ -1,0 +1,53 @@
+{
+  "name": "pdf-management-backend",
+  "version": "1.0.0",
+  "description": "PDF Management System Backend API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build step required for backend\"",
+    "lint": "echo \"Add ESLint configuration for production\"",
+    "clean": "rm -rf uploads/* && echo \"Uploads directory cleaned\""
+  },
+  "keywords": [
+    "pdf",
+    "management",
+    "api",
+    "nodejs",
+    "express",
+    "conversion",
+    "merge",
+    "split",
+    "protect"
+  ],
+  "author": "PDF Management Team",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "html-pdf-node": "^1.0.8",
+    "jspdf": "^3.0.2",
+    "mammoth": "^1.10.0",
+    "multer": "^2.0.2",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "puppeteer": "^24.17.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Devil-008/PDF-management.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Devil-008/PDF-management/issues"
+  },
+  "homepage": "https://github.com/Devil-008/PDF-management#readme"
+}
