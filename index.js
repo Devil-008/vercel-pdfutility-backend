@@ -20,9 +20,9 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Create uploads directory if it doesn't exist
+// Create uploads directory if it doesn't exist (for local development)
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
+if (!fs.existsSync(uploadsDir) && process.env.NODE_ENV !== 'production') {
     fs.mkdirSync(uploadsDir);
 }
 
@@ -717,6 +717,12 @@ function parsePageRanges(ranges, maxPage) {
     return Array.from(indices).sort((a, b) => a - b);
 }
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+// Export for Vercel serverless deployment
+module.exports = app;
+
+// Only start server if not in Vercel environment
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
+}

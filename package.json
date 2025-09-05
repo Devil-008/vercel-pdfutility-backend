@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "build": "echo \"Backend ready for deployment\"",
+    "vercel-build": "echo \"No build step required\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"No build step required for backend\"",
     "lint": "echo \"Add ESLint configuration for production\"",
     "clean": "rm -rf uploads/* && echo \"Uploads directory cleaned\""
   },
