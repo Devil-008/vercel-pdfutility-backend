@@ -11,14 +11,54 @@ const XLSX = require('xlsx');
 const pdfParse = require('pdf-parse');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
-app.use(cors());
+// Environment variables with defaults
+const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE) || 50 * 1024 * 1024; // 50MB
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+const UPLOAD_TIMEOUT = parseInt(process.env.UPLOAD_TIMEOUT) || 60000; // 60 seconds
+
+// CORS configuration
+const corsOptions = {
+    origin: CORS_ORIGIN === '*' ? '*' : CORS_ORIGIN.split(','),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Setup storage for uploaded files
+// Setup storage for uploaded files with size limit
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ 
+    storage,
+    limits: {
+        fileSize: MAX_FILE_SIZE,
+        fieldSize: MAX_FILE_SIZE
+    },
+    fileFilter: (req, file, cb) => {
+        // Allow PDF and Office files
+        const allowedMimes = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/msword',
+            'application/vnd.ms-excel',
+            'application/vnd.ms-powerpoint',
+            'image/jpeg',
+            'image/png',
+            'image/jpg'
+        ];
+        
+        if (allowedMimes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error(`Unsupported file type: ${file.mimetype}`), false);
+        }
+    }
+});
 
 // Create uploads directory if it doesn't exist (for local development)
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -27,7 +67,22 @@ if (!fs.existsSync(uploadsDir) && process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/', (req, res) => {
-    res.send('Backend server is running!');
+    res.json({
+        message: 'PDF Management Backend API',
+        status: 'running',
+        version: '1.0.0',
+        environment: process.env.NODE_ENV || 'development',
+        endpoints: [
+            'POST /api/merge - Merge PDF files',
+            'POST /api/split - Split PDF files',
+            'POST /api/rotate - Rotate PDF pages',
+            'POST /api/compress - Compress PDF files',
+            'POST /api/protect - Add password protection',
+            'POST /api/unlock - Remove password protection',
+            'POST /api/watermark - Add watermark',
+            'POST /api/convert-office - Convert between formats'
+        ]
+    });
 });
 
 // PDF Merge Endpoint

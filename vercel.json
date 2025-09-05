@@ -7,7 +7,8 @@
             "config": {
                 "includeFiles": [
                     "dist/**"
-                ]
+                ],
+                "maxLambdaSize": "50mb"
             }
         }
     ],
@@ -19,11 +20,14 @@
     ],
     "functions": {
         "index.js": {
-            "maxDuration": 60
+            "maxDuration": 60,
+            "memory": 1024,
+            "runtime": "nodejs18.x"
         }
     },
     "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "VERCEL_ENV": "production"
     },
     "headers": [
         {
@@ -40,6 +44,10 @@
                 {
                     "key": "Access-Control-Allow-Headers",
                     "value": "Content-Type, Authorization"
+                },
+                {
+                    "key": "Access-Control-Max-Age",
+                    "value": "86400"
                 }
             ]
         }
